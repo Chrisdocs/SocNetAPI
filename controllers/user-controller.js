@@ -73,8 +73,8 @@ const userController = {
             { $addToSet: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
-        .then(dbUserData => {
-            if (!dbUserData) {
+        .then(dbfriendData => {
+            if (!dbfriendData) {
                 res.status(404).json({ message: 'No user found with this userId' });
                 return;
             }
@@ -84,12 +84,12 @@ const userController = {
                 { $addToSet: { friends: params.userId } },
                 { new: true, runValidators: true }
             )
-            .then(dbUserData2 => {
-                if(!dbUserData2) {
+            .then(dbFriendDataB => {
+                if(!dbFriendDataB) {
                     res.status(404).json({ message: 'No user found with this friendId' })
                     return;
                 }
-                res.json(dbUserData);
+                res.json(dbFriendData);
             })
             .catch(err => {
                 console.log(err);
@@ -101,8 +101,43 @@ const userController = {
             res.status(400).json(err);
         })
     },
-}
 
     // remove friend
+    deleteFriend( { params }, res) {
+        //remove friend from user
+        User.findByIdAndUpdate(
+            { _id: params.userId },
+            { $pull: { friends: params.friendId } },
+            { new: true, runValidators: true}
+        )
+        .then(dbFriendData => {
+            if (!dbUserData) {
+                res.status(404).json( { message: 'No user found with that Id.'} )
+                return;
+            }
+            User.findByIdAndUpdate(
+                { _id: params.friendId },
+                { $pull: { friends: params.userId } },
+                { new: true, runValidators: true }
+            )
+            .then(dbFriendDataB => {
+                if (!dbUserDataB) {
+                    res.status(404).json( { message: 'No user found with that Id.'} )
+                    return;
+                }
+                res.json({ message: 'Friend has been removed!'})
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        })
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(400).json(err);
+    })
+}
+
+}
 
 module.exports = userController;

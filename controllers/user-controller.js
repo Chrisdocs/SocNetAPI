@@ -5,7 +5,7 @@ const userController = {
     getAllUser(req, res) {
         User.find({})
             .populate({ 
-                path: 'Thoughts', 
+                path: 'Thought', 
                 select: '-__v'
             })
             .select('-__v')
@@ -20,7 +20,7 @@ const userController = {
     getUserById( { params }, res) {
         User.findOne( { _id: params.id } )
             .populate({ 
-                path: 'Thoughts', 
+                path: 'Thought', 
                 select: '-__v'
             })
                 .select('-__v')
@@ -81,11 +81,12 @@ const userController = {
         // add friend to user
         User.findOneAndUpdate(
             { _id: params.userId },
-            { $addToSet: { friends: params.friendId } },
+            { $push: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
-        .then(dbfriendData => {
-            if (!dbfriendData) {
+        .select('-__v')
+        .then(dbFriendData => {
+            if (!dbFriendData) {
                 res.status(404).json({ message: 'No user found with this userId' });
                 return;
             }
@@ -122,7 +123,7 @@ const userController = {
             { new: true, runValidators: true}
         )
         .then(dbFriendData => {
-            if (!dbUserData) {
+            if (!dbFriendData) {
                 res.status(404).json( { message: 'No user found with that Id.'} )
                 return;
             }
@@ -132,7 +133,7 @@ const userController = {
                 { new: true, runValidators: true }
             )
             .then(dbFriendDataB => {
-                if (!dbUserDataB) {
+                if (!dbFriendDataB) {
                     res.status(404).json( { message: 'No user found with that Id.'} )
                     return;
                 }

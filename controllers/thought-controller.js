@@ -15,12 +15,9 @@ const thoughtController = {
 
     //get a thought by id
     getThoughtById({ params, body }, res) {
-        Thought.findOne(
-            { _id: params.id },
-                { $push: { Thoughts: body }},
-                { new: true, runValidators: true }
-            )
+        Thought.findOne( { _id: params.id })
             .populate({ path: 'user', select: '-__v' })
+            .select('-__v')
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
                     res.status(404).json({

@@ -26,8 +26,11 @@ router
 
 // set up routes for adding and deleting reactions
 router
-    .route('/:thoughtId/:reactionId')
+    .route('/:thoughtId/reactions')
     .post(addReaction)
+
+router
+    .route('/:thoughtId/:reactionId')
     .delete(removeReaction)
 
 module.exports = router;

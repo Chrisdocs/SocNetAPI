@@ -4,7 +4,7 @@ const thoughtController = {
     //get all thoughts
     getAllThoughts(req, res) {
         Thought.find({})
-            .populate({ path: 'user', select: '-__v' })
+            .populate({ path: 'reactions', select: '-__v'})
             .select('-__v')
             .then(dbThoughtData => res.json(dbThoughtData))
             .catch(err => {
@@ -14,12 +14,12 @@ const thoughtController = {
     },
 
     //get a thought by id
-    getThoughtById({
-        params
-    }, res) {
-        Thought.findOne({
-                _id: params.id
-            })
+    getThoughtById({ params, body }, res) {
+        Thought.findOne(
+            { _id: params.id },
+                { $push: { Thoughts: body }},
+                { new: true, runValidators: true }
+            )
             .populate({ path: 'user', select: '-__v' })
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
@@ -38,9 +38,7 @@ const thoughtController = {
 
 
     // create a thought
-    createThought({
-        body
-    }, res) {
+    createThought({ body }, res) {
         Thought.create(body)
             .then(dbThoughtData => res.json(dbThoughtData))
             .catch(err => {
@@ -99,19 +97,12 @@ const thoughtController = {
     },
 
     // create a reaction stored in the thoughts models reations array
-    addReaction({
-        params
-    }, res) {
-        Thought.findByIdAndUpdate({
-                _id: params.thoughtid
-            }, {
-                $addToSet: {
-                    reactions: body
-                }
-            }, {
-                new: true,
-                runValidators: true
-            })
+    addReaction({ params, body }, res) {
+        Thought.findByIdAndUpdate(
+            { _id: params.thoughtId }, 
+            { $push: { reactions: body } }, 
+            { new: true, runValidators: true }
+            )
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
                     res.status(404).json({
@@ -128,19 +119,12 @@ const thoughtController = {
     },
 
     // delete a reaction from the  thought models reation array
-    removeReaction({
-        params
-    }, res) {
-        Thought.findByIdAndUpdate({
-                _id: params.thoughtid
-            }, {
-                $pull: {
-                    reactionId: body.reactionId
-                }
-            }, {
-                new: true,
-                runValidators: true
-            })
+    removeReaction({ params }, res) {
+        Thought.findByIdAndUpdate(
+            { _id: params.thoughtid }, 
+            { $pull: { reactionId: body.reactionId } }, 
+            { new: true, runValidators: true } 
+            )
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
                     res.status(404).json({

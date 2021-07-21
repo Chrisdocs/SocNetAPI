@@ -1,5 +1,6 @@
 const { Schema, model, Types} = require('mongoose');
 const ReactionSchema = require('./Reaction')
+const { DateTime } = require('luxon');
 
 const ThoughtSchema = new Schema({
     thoughtText: {
@@ -10,12 +11,13 @@ const ThoughtSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now,
-        //get:
+        default: DateTime.now,
+        get: createdAtVal => new DateTime(createdAtVal).toLocaleString(DateTime.DATETIME_MED)
     },
     username: {
         type: String,
-        required: true
+        required: true,
+        ref: 'User'
     },
     reactions: [ReactionSchema]
 },

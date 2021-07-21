@@ -13,20 +13,20 @@ const {
 
 // set up Get All routes at /api/thoughts
 router
-    .route('/thoughts')
+    .route('/')
     .get(getAllThoughts)
     .post(createThought)
 
 // set up Get one routes at /api/thoughts/:id
 router
-    .route('/api/thoughts/:id')
+    .route('/:id')
     .get(getThoughtById)
     .put(updateThought)
     .delete(deleteThought)
 
 // set up routes for adding and deleting reactions
 router
-    .route('/api/thoughts/:thoughtid/reactions')
+    .route('/:thoughtId/:reactionId')
     .post(addReaction)
     .delete(removeReaction)
 

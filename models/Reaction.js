@@ -1,4 +1,5 @@
 const { Schema, model, Types} = require('mongoose');
+const { DateTime } = require('luxon');
 
 
 const ReactionSchema = new Schema({
@@ -17,8 +18,8 @@ const ReactionSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now,
-        //get:
+        default: DateTime.now,
+        get: createdAtVal => new DateTime(createdAtVal).toLocaleString(DateTime.DATETIME_MED)
     }
 },
 {

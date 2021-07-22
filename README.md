@@ -22,6 +22,7 @@
     
   
   ## Usage
+  ![demo of the API](./assets/demo.gif)
 
   Once installed, as mentioned previously you can test the routes using your preffered method.  The API is meant to be used in conjunction with some type of social funstionality for your application.  Copy into your applications file structure and apply as needed!
     

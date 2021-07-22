@@ -1,7 +1,6 @@
 const { db, remove } = require('../models/Thought');
 const Thought = require('../models/Thought');
 const User = require('../models/User');
-const Reaction = require('../models/Thought');
 
 const thoughtController = {
     //get all thoughts
